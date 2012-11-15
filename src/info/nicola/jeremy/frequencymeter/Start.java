@@ -178,22 +178,7 @@ public class Start extends JFrame
 		}).start();
 	}
 	
-	/**
-	 * Finds the most energetic peak
-	 * @param signal
-	 * @return
-	 */
-	public static int FindHighestAmplitude(float[] signal) {
-		float max = 0;
-		int index=0;
-		for(int i=0; i<signal.length; i++){
-			if(signal[i]>max){
-				max=signal[i];
-				index=i;
-			}
-		}
-		return index;
-	}
+	
 	
 	/**
 	 * Converts a 2-bytes array to a float array
