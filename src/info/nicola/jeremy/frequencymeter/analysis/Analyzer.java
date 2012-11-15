@@ -52,6 +52,7 @@ public class Analyzer extends Thread implements WindowListener {
 
 	@Override
 	public void run() {
+		this.run=true;
 		while (run) {
 			byte[] raw = new byte[this.bufferLength * 2];
 			targetDataLine.read(raw, 0, this.bufferLength * 2);

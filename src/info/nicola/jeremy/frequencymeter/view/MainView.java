@@ -21,6 +21,7 @@ import org.jfree.chart.plot.dial.StandardDialFrame;
 import org.jfree.chart.plot.dial.StandardDialRange;
 import org.jfree.chart.plot.dial.StandardDialScale;
 import org.jfree.data.general.DefaultValueDataset;
+import org.jfree.data.general.ValueDataset;
 import org.jfree.ui.GradientPaintTransformType;
 import org.jfree.ui.StandardGradientPaintTransformer;
 
@@ -36,39 +37,19 @@ public class MainView extends JFrame{
 	public MainView(String name){
 		super(name);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(getPanel());
+		setContentPane(createDemoPanel());
 	}
 	
 	public void setFrequency(int frequency){
 		dataSet.setValue(new Integer(frequency));
 	}
 	
-	private JPanel getPanel(){
-		DialPlot dialplot = new DialPlot();
-		dialplot.setDataset(dataSet);
-		dialplot.setDialFrame(new StandardDialFrame());
-		dialplot.setBackground(new DialBackground());
-		DialTextAnnotation dialtextannotation = new DialTextAnnotation("Frequency (Hz)");
-		dialtextannotation.setFont(new Font("Dialog", 1, 14));
-		dialtextannotation.setRadius(0.69999999999999996D);
-		dialplot.addLayer(dialtextannotation);
-		DialValueIndicator dialvalueindicator = new DialValueIndicator(0);
-		dialplot.addLayer(dialvalueindicator);
-		StandardDialScale standarddialscale = new StandardDialScale(0d, 500d, -120D, -300D, 10D, 4);
-		standarddialscale.setMajorTickIncrement(500d);
-		standarddialscale.setMinorTickCount(4);
-		standarddialscale.setTickRadius(0.88D);
-		standarddialscale.setTickLabelOffset(0.14999999999999999D);
-		standarddialscale.setTickLabelFont(new Font("Dialog", 0, 14));
-		dialplot.addScale(0, standarddialscale);
-		dialplot.addPointer(new org.jfree.chart.plot.dial.DialPointer.Pin());
-		DialCap dialcap = new DialCap();
-		dialplot.setCap(dialcap);
-		
+	public JPanel createDemoPanel()
+	{
 		JPanel panel=new JPanel(new BorderLayout());
-		dataSet=new DefaultValueDataset(10d);
-		JFreeChart chart=new JFreeChart("UV 5.5 - Demo", dialplot);
-		
+		dataSet = new DefaultValueDataset(10D);
+		JFreeChart jfreechart = createDialChart("UV 5.5 - Démo", "Frequency (Hz)", dataSet, 0D, 5000D, 500D, 4);
+		DialPlot dialplot = (DialPlot)jfreechart.getPlot();
 		StandardDialRange standarddialrange = new StandardDialRange(40D, 60D, Color.red);
 		standarddialrange.setInnerRadius(0.52000000000000002D);
 		standarddialrange.setOuterRadius(0.55000000000000004D);
@@ -88,10 +69,34 @@ public class MainView extends JFrame{
 		dialplot.removePointer(0);
 		org.jfree.chart.plot.dial.DialPointer.Pointer pointer = new org.jfree.chart.plot.dial.DialPointer.Pointer();
 		dialplot.addPointer(pointer);
-		ChartPanel chartpanel = new ChartPanel(chart);
+		ChartPanel chartpanel = new ChartPanel(jfreechart);
 		chartpanel.setPreferredSize(new Dimension(400, 400));
 		
 		panel.add(chartpanel);
 		return panel;
+	}
+	
+	private JFreeChart createDialChart(String title, String caption, ValueDataset dataSet, double dScaleMin, double dScaleMax, double majorTick, int tickCount){
+		DialPlot dialplot = new DialPlot();
+		dialplot.setDataset(dataSet);
+		dialplot.setDialFrame(new StandardDialFrame());
+		dialplot.setBackground(new DialBackground());
+		DialTextAnnotation dialtextannotation = new DialTextAnnotation(caption);
+		dialtextannotation.setFont(new Font("Dialog", 1, 14));
+		dialtextannotation.setRadius(0.69999999999999996D);
+		dialplot.addLayer(dialtextannotation);
+		DialValueIndicator dialvalueindicator = new DialValueIndicator(0);
+		dialplot.addLayer(dialvalueindicator);
+		StandardDialScale standarddialscale = new StandardDialScale(dScaleMin, dScaleMax, -120D, -300D, 10D, 4);
+		standarddialscale.setMajorTickIncrement(majorTick);
+		standarddialscale.setMinorTickCount(tickCount);
+		standarddialscale.setTickRadius(0.88D);
+		standarddialscale.setTickLabelOffset(0.14999999999999999D);
+		standarddialscale.setTickLabelFont(new Font("Dialog", 0, 14));
+		dialplot.addScale(0, standarddialscale);
+		dialplot.addPointer(new org.jfree.chart.plot.dial.DialPointer.Pin());
+		DialCap dialcap = new DialCap();
+		dialplot.setCap(dialcap);
+		return new JFreeChart(title, dialplot);
 	}
 }
